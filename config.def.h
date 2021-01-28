@@ -35,19 +35,6 @@ static const unsigned int alphas[][3]      = {
 	[SchemeSel]  = { OPAQUE, baralpha, borderalpha },
 };
 
-static const char *const autostart[] = {
-	"clipmenud", NULL,
-	"mpd", NULL,
-	"mpDris2", NULL,
-	"dunst", NULL,
-	"sh", "-c", "fehbg", NULL,
-	"nm-applet", NULL,
-	"pasystray", NULL,
-	"blueman-applet", NULL,
-	"sxhkd", NULL,
-	NULL /* terminate */
-};
-
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
