@@ -82,7 +82,7 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, NULL };
 static const char *termcmd[]  = { "kitty", NULL };
 static const char scratchpadname[] = "scratchpad";
-static const char *scratchpadcmd[] = { "kitty", "-T", scratchpadname, NULL };
+static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, NULL };
 /*
  * Xresources preferences to load at startup
  */
