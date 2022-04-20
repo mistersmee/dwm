@@ -2,7 +2,7 @@
 
 pkgname=dwm-aseem
 _pkgname=dwm
-pkgver=6.2.r1709.e586219
+pkgver=6.3.r1737.8909960
 pkgrel=1
 epoch=1
 pkgdesc="My build of dwm."
@@ -11,7 +11,7 @@ arch=(any)
 license=('MIT')
 depends=('libxinerama' 'fontconfig' 'libxft-bgra-git' 'libx11' 'libxcb' 'xcb-proto' 'libxrender')
 makedepends=('git')
-source=('git://github.com/mistersmee/dwm')
+source=('git+https://github.com/mistersmee/dwm')
 sha1sums=('SKIP')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
