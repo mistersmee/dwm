@@ -36,6 +36,20 @@ static char *colors[][3] = {
        [SchemeNorm] = { normfgcolor, normbgcolor, normbordercolor },
        [SchemeSel]  = { selfgcolor,  selbgcolor,  selbordercolor  },
 };
+typedef struct {
+	const char *name;
+	const void *cmd;
+} Sp;
+const char *spcmd1[] = {"st", "-n", "spterm1", "-g", "120x34", NULL };
+const char *spcmd2[] = {"st", "-n", "spterm2", "-g", "120x34",  NULL };
+const char *spcmd3[] = {"st", "-n", "spterm3", "-g", "120x34", NULL };
+static Sp scratchpads[] = {
+	/* name          cmd  */
+	{"spterm1",   spcmd1},
+	{"spterm2",   spcmd2},
+	{"spterm3",   spcmd3},
+};
+
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
@@ -50,6 +64,9 @@ static const Rule rules[] = {
 	{ "firefox", NULL,     NULL,           1 << 8,    0,          0,          -1,        -1 },
 	{ "St",      NULL,     NULL,           0,         0,          1,           0,        -1 },
 	{ "kitty",   NULL,     NULL,           0,         0,          1,           0,        -1 },
+	{ NULL,      "spterm1", NULL,          SPTAG(0),  1,          1,           0,        -1 },
+	{ NULL,      "spterm2", NULL,          SPTAG(1),  1,          1,           0,        -1 },
+	{ NULL,      "spterm3", NULL,          SPTAG(2),  1,          1,           0,        -1 },
 	{ NULL,      NULL,     "Event Tester", 0,         0,          0,           1,        -1 }, /* xev */
 };
 
@@ -102,10 +119,11 @@ ResourcePref resources[] = {
 		{ "mfact",      	 	FLOAT,   &mfact },
 };
 
+
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
-	{ MODKEY,             XK_Return, spawn,          {.v = termcmd } },
+	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
@@ -121,20 +139,20 @@ static Key keys[] = {
 	{ MODKEY|Mod1Mask|ControlMask,  XK_l,      incrigaps,      {.i = -1 } },
 	{ MODKEY|Mod1Mask,              XK_0,      togglegaps,     {0} },
 	{ MODKEY|Mod1Mask|ShiftMask,    XK_0,      defaultgaps,    {0} },
-	{ MODKEY|ControlMask,                       XK_y,      incrihgaps,     {.i = +1 } },
-	{ MODKEY|ControlMask,                       XK_o,      incrihgaps,     {.i = -1 } },
-	{ MODKEY|ControlMask|ShiftMask,           XK_y,      incrivgaps,     {.i = +1 } },
-	{ MODKEY|ControlMask|ShiftMask,           XK_o,      incrivgaps,     {.i = -1 } },
+	{ MODKEY|ControlMask,           XK_y,      incrihgaps,     {.i = +1 } },
+	{ MODKEY|ControlMask,           XK_o,      incrihgaps,     {.i = -1 } },
+	{ MODKEY|ControlMask|ShiftMask, XK_y,      incrivgaps,     {.i = +1 } },
+	{ MODKEY|ControlMask|ShiftMask, XK_o,      incrivgaps,     {.i = -1 } },
 	{ MODKEY|Mod1Mask,              XK_y,      incrohgaps,     {.i = +1 } },
 	{ MODKEY|Mod1Mask,              XK_o,      incrohgaps,     {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_y,      incrovgaps,     {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_o,      incrovgaps,     {.i = -1 } },
-	{ MODKEY|ShiftMask,                       XK_Return, zoom,           {0} },
-	{ MODKEY,                       XK_grave,    view,           {0} },
+	{ MODKEY|ShiftMask,             XK_Return, zoom,           {0} },
+	{ MODKEY,                       XK_grave,  view,           {0} },
 	{ MODKEY|ShiftMask,             XK_q,      killclient,     {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
-	{MODKEY|ShiftMask,												XK_f,			fullscreen,				{0} },
+	{ MODKEY|ShiftMask,             XK_f,      fullscreen,     {0} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
@@ -144,6 +162,9 @@ static Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+	{ MODKEY,                       XK_y,      togglescratch,  {.ui = 0 } },
+	{ MODKEY,                       XK_u,      togglescratch,  {.ui = 1 } },
+	{ MODKEY,                       XK_x,      togglescratch,  {.ui = 2 } },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
@@ -166,7 +187,7 @@ static Button buttons[] = {
 	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
-	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
+	{ ClkClientWin,         MODKEY,         Button1,        resizemouse,    {0} },
 	{ ClkTagBar,            0,              Button1,        view,           {0} },
 	{ ClkTagBar,            0,              Button3,        toggleview,     {0} },
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
