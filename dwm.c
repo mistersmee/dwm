@@ -2743,6 +2743,7 @@ getparentprocess(pid_t p)
 	if (!(f = fopen(buf, "r")))
 		return 0;
 
+	fscanf(f, "%*u %*s %*c %u", &v);
 	fclose(f);
 #endif /* __linux__*/
 
