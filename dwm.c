@@ -52,38 +52,38 @@
 #include "util.h"
 
 /* macros */
-#define BUTTONMASK              (ButtonPressMask|ButtonReleaseMask)
-#define CLEANMASK(mask)         (mask & ~(numlockmask|LockMask) & (ShiftMask|ControlMask|Mod1Mask|Mod2Mask|Mod3Mask|Mod4Mask|Mod5Mask))
-#define INTERSECT(x,y,w,h,m)    (MAX(0, MIN((x)+(w),(m)->wx+(m)->ww) - MAX((x),(m)->wx)) \
-                               * MAX(0, MIN((y)+(h),(m)->wy+(m)->wh) - MAX((y),(m)->wy)))
-#define ISVISIBLE(C)            ((C->tags & C->mon->tagset[C->mon->seltags]))
-#define LENGTH(X)               (sizeof X / sizeof X[0])
-#define MOUSEMASK               (BUTTONMASK|PointerMotionMask)
-#define WIDTH(X)                ((X)->w + 2 * (X)->bw)
-#define HEIGHT(X)               ((X)->h + 2 * (X)->bw)
+#define BUTTONMASK		(ButtonPressMask|ButtonReleaseMask)
+#define CLEANMASK(mask)		(mask & ~(numlockmask|LockMask) & (ShiftMask|ControlMask|Mod1Mask|Mod2Mask|Mod3Mask|Mod4Mask|Mod5Mask))
+#define INTERSECT(x,y,w,h,m)	(MAX(0, MIN((x)+(w),(m)->wx+(m)->ww) - MAX((x),(m)->wx)) \
+			       * MAX(0, MIN((y)+(h),(m)->wy+(m)->wh) - MAX((y),(m)->wy)))
+#define ISVISIBLE(C)		((C->tags & C->mon->tagset[C->mon->seltags]))
+#define LENGTH(X)		(sizeof X / sizeof X[0])
+#define MOUSEMASK		(BUTTONMASK|PointerMotionMask)
+#define WIDTH(X)		((X)->w + 2 * (X)->bw)
+#define HEIGHT(X)		((X)->h + 2 * (X)->bw)
 #define NUMTAGS					(LENGTH(tags) + LENGTH(scratchpads))
-#define TAGMASK     			((1 << NUMTAGS) - 1)
-#define SPTAG(i) 				((1 << LENGTH(tags)) << (i))
-#define SPTAGMASK   			(((1 << LENGTH(scratchpads))-1) << LENGTH(tags))
-#define TEXTW(X)                (drw_fontset_getwidth(drw, (X)) + lrpad)
+#define TAGMASK				((1 << NUMTAGS) - 1)
+#define SPTAG(i)				((1 << LENGTH(tags)) << (i))
+#define SPTAGMASK			(((1 << LENGTH(scratchpads))-1) << LENGTH(tags))
+#define TEXTW(X)		(drw_fontset_getwidth(drw, (X)) + lrpad)
 
 #define SYSTEM_TRAY_REQUEST_DOCK    0
 
 /* XEMBED messages */
-#define XEMBED_EMBEDDED_NOTIFY      0
-#define XEMBED_WINDOW_ACTIVATE      1
-#define XEMBED_FOCUS_IN             4
-#define XEMBED_MODALITY_ON         10
+#define XEMBED_EMBEDDED_NOTIFY	    0
+#define XEMBED_WINDOW_ACTIVATE	    1
+#define XEMBED_FOCUS_IN		    4
+#define XEMBED_MODALITY_ON	   10
 
-#define XEMBED_MAPPED              (1 << 0)
-#define XEMBED_WINDOW_ACTIVATE      1
+#define XEMBED_MAPPED		   (1 << 0)
+#define XEMBED_WINDOW_ACTIVATE	    1
 #define XEMBED_WINDOW_DEACTIVATE    2
 
-#define VERSION_MAJOR               0
-#define VERSION_MINOR               0
+#define VERSION_MAJOR		    0
+#define VERSION_MINOR		    0
 #define XEMBED_EMBEDDED_VERSION (VERSION_MAJOR << 16) | VERSION_MINOR
 
-#define OPAQUE                  0xffU
+#define OPAQUE			0xffU
 
 /* enums */
 enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
@@ -148,13 +148,13 @@ struct Monitor {
 	float mfact;
 	int nmaster;
 	int num;
-	int by;               /* bar geometry */
+	int by;		      /* bar geometry */
 	int mx, my, mw, mh;   /* screen size */
 	int wx, wy, ww, wh;   /* window area  */
-	int gappih;           /* horizontal gap between windows */
-	int gappiv;           /* vertical gap between windows */
-	int gappoh;           /* horizontal outer gaps */
-	int gappov;           /* vertical outer gaps */
+	int gappih;	      /* horizontal gap between windows */
+	int gappiv;	      /* vertical gap between windows */
+	int gappoh;	      /* horizontal outer gaps */
+	int gappov;	      /* vertical outer gaps */
 	unsigned int seltags;
 	unsigned int sellt;
 	unsigned int tagset[2];
@@ -179,7 +179,7 @@ typedef struct {
 	int monitor;
 } Rule;
 
-typedef struct Systray   Systray;
+typedef struct Systray	 Systray;
 struct Systray {
 	Window win;
 	Client *icons;
@@ -327,10 +327,10 @@ static Systray *systray =  NULL;
 static const char broken[] = "broken";
 static char stext[256];
 static int screen;
-static int sw, sh;           /* X display screen geometry width, height */
+static int sw, sh;	     /* X display screen geometry width, height */
 static int bh, blw = 0;      /* bar geometry */
 static int enablegaps = 1;   /* enables gaps, used by togglegaps */
-static int lrpad;            /* sum of left and right padding for text */
+static int lrpad;	     /* sum of left and right padding for text */
 static int (*xerrorxlib)(Display *, XErrorEvent *);
 static unsigned int numlockmask = 0;
 static void (*handler[LASTEvent]) (XEvent *) = {
@@ -386,8 +386,8 @@ applyrules(Client *c)
 	c->isfloating = 0;
 	c->tags = 0;
 	XGetClassHint(dpy, c->win, &ch);
-	class    = ch.res_class ? ch.res_class : broken;
-	instance = ch.res_name  ? ch.res_name  : broken;
+	class	 = ch.res_class ? ch.res_class : broken;
+	instance = ch.res_name	? ch.res_name  : broken;
 
 	for (i = 0; i < LENGTH(rules); i++) {
 		r = &rules[i];
@@ -2317,8 +2317,8 @@ updatebars(void)
 		if (showsystray && m == systraytomon(m))
 			w -= getsystraywidth();
 		m->barwin = XCreateWindow(dpy, root, m->wx, m->by, m->ww, bh, 0, depth,
-		                          InputOutput, visual,
-		                          CWOverrideRedirect|CWBackPixel|CWBorderPixel|CWColormap|CWEventMask, &wa);
+					  InputOutput, visual,
+					  CWOverrideRedirect|CWBackPixel|CWBorderPixel|CWColormap|CWEventMask, &wa);
 		XDefineCursor(dpy, m->barwin, cursor[CurNormal]->cursor);
 		if (showsystray && m == systraytomon(m))
 			XMapRaised(dpy, systray->win);
@@ -2569,7 +2569,7 @@ updatesystray(void)
 		if (!(systray = (Systray *)calloc(1, sizeof(Systray))))
 			die("fatal: could not malloc() %u bytes\n", sizeof(Systray));
 		systray->win = XCreateSimpleWindow(dpy, root, x, m->by, w, bh, 0, 0, scheme[SchemeSel][ColBg].pixel);
-		wa.event_mask        = ButtonPressMask | ExposureMask;
+		wa.event_mask	     = ButtonPressMask | ExposureMask;
 		wa.override_redirect = True;
 		wa.background_pixel  = scheme[SchemeNorm][ColBg].pixel;
 		XSelectInput(dpy, systray->win, SubstructureNotifyMask);
@@ -2703,18 +2703,18 @@ winpid(Window w)
 #endif /* __linux__ */
 
 #ifdef __OpenBSD__
-        Atom type;
-        int format;
-        unsigned long len, bytes;
-        unsigned char *prop;
-        pid_t ret;
+	Atom type;
+	int format;
+	unsigned long len, bytes;
+	unsigned char *prop;
+	pid_t ret;
 
-        if (XGetWindowProperty(dpy, w, XInternAtom(dpy, "_NET_WM_PID", 0), 0, 1, False, AnyPropertyType, &type, &format, &len, &bytes, &prop) != Success || !prop)
-               return 0;
+	if (XGetWindowProperty(dpy, w, XInternAtom(dpy, "_NET_WM_PID", 0), 0, 1, False, AnyPropertyType, &type, &format, &len, &bytes, &prop) != Success || !prop)
+	       return 0;
 
-        ret = *(pid_t*)prop;
-        XFree(prop);
-        result = ret;
+	ret = *(pid_t*)prop;
+	XFree(prop);
+	result = ret;
 
 #endif /* __OpenBSD__ */
 	return result;

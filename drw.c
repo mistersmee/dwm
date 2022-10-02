@@ -13,7 +13,7 @@
 
 static const unsigned char utfbyte[UTF_SIZ + 1] = {0x80,    0, 0xC0, 0xE0, 0xF0};
 static const unsigned char utfmask[UTF_SIZ + 1] = {0xC0, 0x80, 0xE0, 0xF0, 0xF8};
-static const long utfmin[UTF_SIZ + 1] = {       0,    0,  0x80,  0x800,  0x10000};
+static const long utfmin[UTF_SIZ + 1] = {	0,    0,  0x80,  0x800,  0x10000};
 static const long utfmax[UTF_SIZ + 1] = {0x10FFFF, 0x7F, 0x7FF, 0xFFFF, 0x10FFFF};
 
 static long
@@ -190,7 +190,7 @@ drw_clr_create(Drw *drw, Clr *dest, const char *clrname, unsigned int alpha)
 		return;
 
 	if (!XftColorAllocName(drw->dpy, drw->visual, drw->cmap,
-	                       clrname, dest))
+			       clrname, dest))
 		die("error, cannot allocate color '%s'", clrname);
 
 	dest->pixel = (dest->pixel & 0x00ffffffU) | (alpha << 24);
@@ -322,7 +322,7 @@ drw_text(Drw *drw, int x, int y, unsigned int w, unsigned int h, unsigned int lp
 			if (render) {
 				ty = y + (h - usedfont->h) / 2 + usedfont->xfont->ascent;
 				XftDrawStringUtf8(d, &drw->scheme[invert ? ColBg : ColFg],
-				                  usedfont->xfont, x, ty, (XftChar8 *)utf8str, utf8strlen);
+						  usedfont->xfont, x, ty, (XftChar8 *)utf8str, utf8strlen);
 			}
 			x += ew;
 			w -= ew;
